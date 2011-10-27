@@ -2,4 +2,5 @@
 
 * http://github.com/hexicz/PDFWatermark
 
-== Popis
+== Zadání
+Vytvořte modul, který umožní pedagogům publikovat dokumenty tím způsobem, že jejich stažení bude možné pouze po přihlášení hlavním uživatelským heslem. Stažené materiály pak budou v PDF formě opatřeny "vodotiskem" se jménem studenta, který si materiály stáhnul. Znesnadní se tak šíření studijních materiálů mimo ČVUT a bude tak například možno učební texty poskytovat studentům ČVUT v elektronické podobě a zároveň vydat knižně.
