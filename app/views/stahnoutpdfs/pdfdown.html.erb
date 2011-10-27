@@ -1,0 +1,23 @@
+<h1>Seznam PDF na stažení</h1>
+
+<table>
+	<tr>
+		<th>Název</th>
+		<th>Vložil</th>
+		<th>Kdy</th>
+		<th></th>
+	</tr>
+
+	<% @pdfka.each do |pdfko| %>
+		<tr>
+			<td><%= pdfko.soubor_file_name %></td>
+			<td><%= pdfko.vlozil %></td>
+			<td><%= pdfko.created_at %></td>
+			<td><%= link_to 'Stáhnout', "pdfdown/"+pdfko.id.to_s %></td>
+		</tr>
+	<% end %>
+</table>
+
+<br />
+
+<%= link_to 'Zpět', home_index_path %>

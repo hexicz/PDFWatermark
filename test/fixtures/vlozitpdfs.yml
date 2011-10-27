@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  vlozil: MyString
+  tisk: false
+  kopirovat: false
+
+two:
+  vlozil: MyString
+  tisk: false
+  kopirovat: false

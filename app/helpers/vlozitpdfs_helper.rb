@@ -1,0 +1,2 @@
+module VlozitpdfsHelper
+end

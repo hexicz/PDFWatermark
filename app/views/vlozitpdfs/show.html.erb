@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+	<b>Název:</b>
+	<%= @vlozitpdf.soubor_file_name %>
+</p>
+
+<p>
+  <b>Vložil:</b>
+  <%= @vlozitpdf.vlozil %>
+</p>
+
+<p>
+  <% if @vlozitpdf.tisk %>  <%= image_tag("yes-small.png", :alt=>"yes") %>
+	<% else %> <%= image_tag("no-small.png", :alt=>"no") %>
+	<% end %>
+	<b>Povolen tisk</b>
+</p>
+
+<p>
+  <% if @vlozitpdf.kopirovat %> <%= image_tag("yes-small.png", :alt=>"no") %>
+	<% else %> <%= image_tag("no-small.png", :alt=>"no") %>
+	<% end %>
+	<b>Povoleno kopírování</b>
+</p>
+
+<p>
+	<b>Odkaz ke stažení</b>
+</p>
+
+
+<%= link_to 'Upravit', edit_vlozitpdf_path(@vlozitpdf) %> |
+<%= link_to 'Zpět', vlozitpdfs_path %>

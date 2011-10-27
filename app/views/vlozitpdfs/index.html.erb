@@ -1,0 +1,41 @@
+<h1>Výpis nahraných PDF</h1>
+
+<table>
+  <tr>
+		<th>Název</th>
+    <th>Vložil</th>
+    <th>Povolen tisk</th>
+    <th>Povoleno kopírování</th>
+    <th></th>
+    <th></th>
+    <th></th>
+		<th>Odkaz na stažení</th>
+  </tr>
+
+<% @vlozitpdfs.each do |vlozitpdf| %>
+  <tr>
+		<td><%= vlozitpdf.soubor_file_name %></td>
+    <td><%= vlozitpdf.vlozil %></td>
+    <td>
+			<% if vlozitpdf.tisk %>  <%= image_tag("yes-small.png", :alt=>"yes") %>
+			<% else %> <%= image_tag("no-small.png", :alt=>"no") %>
+			<% end %>
+		</td>
+    <td>
+			<% if vlozitpdf.kopirovat %> <%= image_tag("yes-small.png", :alt=>"no") %>
+			<% else %> <%= image_tag("no-small.png", :alt=>"no") %>
+			<% end %>
+		</td>
+    <td><%= link_to 'Zobrazit', vlozitpdf %></td>
+    <td><%= link_to 'Upravit', edit_vlozitpdf_path(vlozitpdf) %></td>
+    <td><%= link_to 'Smazat', vlozitpdf, :confirm => 'Opravdu smazat?', :method => :delete %></td>
+		<td><%= link_to "http://#{self.request.host}/pdfdown/#{vlozitpdf.hashString.to_s}", "pdfdown/"+vlozitpdf.hashString.to_s %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'Vložit nové PDF', new_vlozitpdf_path %>
+<%= link_to 'Zpět', home_index_path %>
+

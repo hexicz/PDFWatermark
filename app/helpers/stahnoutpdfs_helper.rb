@@ -1,0 +1,2 @@
+module StahnoutpdfsHelper
+end

@@ -1,0 +1,37 @@
+<%= form_for(@vlozitpdf, :html=>{:multipart => true}) do |f| %>
+  <% if @vlozitpdf.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@vlozitpdf.errors.count, "error") %> prohibited this vlozitpdf from being saved:</h2>
+
+      <ul>
+      <% @vlozitpdf.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <div class="field">
+		<%= f.label :soubor, "Vybrat soubor:" %><br />
+		<%= f.file_field :soubor %>
+	</div>
+  <div class="field">
+    <%= f.label :vlozil, "Uživatelské jméno:" %><br />
+    <%= f.text_field :vlozil %>
+  </div>
+	<div class="field">
+		<%= f.label :paticka, "Text v zápatí dokumentu:" %><br />
+		<%= f.text_field :paticka %>
+	</div>
+  <div class="field">
+    <%= f.check_box :tisk %>
+    <%= f.label :tisk, "Povolit tisk" %>
+  </div>
+  <div class="field">
+    <%= f.check_box :kopirovat %>
+    <%= f.label :kopirovat, "Povolit kopírování" %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Uložit" %>
+  </div>
+<% end %>
