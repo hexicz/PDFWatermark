@@ -1,9 +1,13 @@
 Pdfapp::Application.routes.draw do
+  get "secure/index"
+
   match "pdfdown/:hashString" => "stahnoutpdfs#stahnoutpdfko"
 	
 	get "stahnoutpdfs/pdfdown"
 
   resources :vlozitpdfs
+  
+  match "secure" => "secure#index"
 
   get "home/index"
 

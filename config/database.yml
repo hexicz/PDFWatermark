@@ -5,9 +5,10 @@ development:
   encoding: utf8
   database: rubypdf
   pool: 5
-  username: pdf
-  password: pdf
+  username: root
+  password: root
   host: localhost
+  socket: /Applications/MAMP/tmp/mysql/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
