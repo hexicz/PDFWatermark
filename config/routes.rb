@@ -1,5 +1,4 @@
 Pdfapp::Application.routes.draw do
-  get "secure/index"
 
   match "pdfdown/:hashString" => "stahnoutpdfs#stahnoutpdfko"
 	
@@ -8,7 +7,7 @@ Pdfapp::Application.routes.draw do
   resources :vlozitpdfs
   
   match "secure" => "secure#index"
-
+  match "logout" => "secure#logout", :as => :logout
   get "home/index"
 
   # The priority is based upon order of creation:

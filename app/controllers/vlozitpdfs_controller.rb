@@ -43,6 +43,7 @@ class VlozitpdfsController < ApplicationController
   # POST /vlozitpdfs.xml
   def create
     @vlozitpdf = Vlozitpdf.new(params[:vlozitpdf])
+    @vlozitpdf.vlozil = fel_id[:user_id]
 		@vlozitpdf.hashString = ActiveSupport::SecureRandom.base64(8).gsub(/[^0-9A-Za-z]/, '')
 		@vlozitpdf.soubor_file_name = @vlozitpdf.soubor_file_name.gsub(/[^0-9A-Za-z.]/, '')
 

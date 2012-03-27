@@ -18,6 +18,9 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
+    if authenticated?
+     logger.info("#{fel_id[:user_role]}") 
+    end
     @current_user = fel_id if authenticated?   
   end
 

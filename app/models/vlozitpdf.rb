@@ -5,7 +5,7 @@ class Vlozitpdf < ActiveRecord::Base
 
 	before_create :edit_file_name
 	
-	validates :vlozil, :presence => true
+	#validates :vlozil, :presence => true
 	validates_attachment_presence :soubor
 	validates_attachment_content_type :soubor, :content_type => ["application/pdf"], :message => "není PDF!"
 

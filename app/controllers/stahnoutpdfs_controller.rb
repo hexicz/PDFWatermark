@@ -19,7 +19,7 @@ class StahnoutpdfsController < ApplicationController
     def stahnoutpdfko
       #@pdfko = Vlozitpdf.find(params[:hashString])      
       @pdfko = Vlozitpdf.find(:first, :conditions =>["hashString = ?",params[:hashString]])
-			@username = "klikleos"
+			@username = fel_id[:user_id]
     	@hostname = self.request.host
     	@opravneni = 00
     	@velikostPapiru = "A4"
