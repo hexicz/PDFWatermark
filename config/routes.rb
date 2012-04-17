@@ -4,7 +4,9 @@ Pdfapp::Application.routes.draw do
 	
 	get "stahnoutpdfs/pdfdown"
 
-  resources :vlozitpdfs
+  resources :vlozitpdfs do 
+    resources :comments
+  end
   
   match "secure" => "secure#index"
   match "logout" => "secure#logout", :as => :logout

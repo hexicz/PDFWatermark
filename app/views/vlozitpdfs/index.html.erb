@@ -4,6 +4,7 @@
   <tr>
 		<th>Název</th>
     <th>Vložil</th>
+		<th>Distribuce</th>
     <th>Povolen tisk</th>
     <th>Povoleno kopírování</th>
     <th></th>
@@ -16,6 +17,7 @@
   <tr>
 		<td><%= vlozitpdf.soubor_file_name %></td>
     <td><%= vlozitpdf.vlozil %></td>
+		<td><%= vlozitpdf.distribuce %></td>
     <td>
 			<% if vlozitpdf.tisk %>  <%= image_tag("yes-small.png", :alt=>"yes") %>
 			<% else %> <%= image_tag("no-small.png", :alt=>"no") %>
@@ -29,7 +31,7 @@
     <td><%= link_to 'Zobrazit', vlozitpdf %></td>
     <td><%= link_to 'Upravit', edit_vlozitpdf_path(vlozitpdf) %></td>
     <td><%= link_to 'Smazat', vlozitpdf, :confirm => 'Opravdu smazat?', :method => :delete %></td>
-		<td><%= link_to "http://#{self.request.host}/pdfdown/#{vlozitpdf.hashString.to_s}", "pdfdown/"+vlozitpdf.hashString.to_s %></td>
+		<td><%= link_to "https://#{self.request.host}/pdfdown/#{vlozitpdf.hashString.to_s}", "pdfdown/"+vlozitpdf.hashString.to_s %></td>
   </tr>
 <% end %>
 </table>

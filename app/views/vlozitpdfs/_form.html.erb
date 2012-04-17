@@ -15,10 +15,13 @@
 		<%= f.label :soubor, "Vybrat soubor:" %><br />
 		<%= f.file_field :soubor %>
 	</div>
-  <div class="field">
-    <%= f.label :vlozil, "Uživatelské jméno:" %><br />
-    <%= f.text_field :vlozil %>
-  </div>
+	<div class="field">
+		<%= f.label :poznamka, "Informace o dokumentu:" %><br />
+		<%= f.text_area :poznamka %>
+	<div class="field">
+		<%= f.label :distribuce, "Typ distribuce:" %><br />
+		<%= f.select :distribuce, options_for_select(["Zdarma pro všechny", "Zdarma pro studenty", "Placeně"], @vlozitpdf.distribuce) %>
+	</div>
 	<div class="field">
 		<%= f.label :paticka, "Text v zápatí dokumentu:" %><br />
 		<%= f.text_field :paticka %>

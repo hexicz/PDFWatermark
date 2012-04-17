@@ -1,32 +1,82 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-	<b>Název:</b>
+	<strong>Název: </strong>
 	<%= @vlozitpdf.soubor_file_name %>
 </p>
 
 <p>
-  <b>Vložil:</b>
+	<strong>Velikost: </strong>
+	<%= number_to_human_size(@vlozitpdf.soubor_file_size, :precision => 2) %>
+</p>
+
+<p>
+  <strong>Vložil: </strong>
   <%= @vlozitpdf.vlozil %>
 </p>
 
 <p>
-  <% if @vlozitpdf.tisk %>  <%= image_tag("yes-small.png", :alt=>"yes") %>
-	<% else %> <%= image_tag("no-small.png", :alt=>"no") %>
+	<strong>Poznámka: </strong><br />
+	<%= @vlozitpdf.poznamka %>
+</p>
+	
+
+<p>
+	<strong>Distribuce: </strong>
+	<%= @vlozitpdf.distribuce %>
+</p>
+
+
+<p>
+  <% if @vlozitpdf.tisk %>  
+		<%= image_tag("yes-small.png", :alt => "yes") %>
+	<% else %> 
+		<%= image_tag("no-small.png", :alt => "no") %>
 	<% end %>
-	<b>Povolen tisk</b>
+	<strong>Povolen tisk</strong>
 </p>
 
 <p>
-  <% if @vlozitpdf.kopirovat %> <%= image_tag("yes-small.png", :alt=>"no") %>
-	<% else %> <%= image_tag("no-small.png", :alt=>"no") %>
+  <% if @vlozitpdf.kopirovat %> 
+		<%= image_tag("yes-small.png", :alt => "no") %>
+	<% else %> 
+		<%= image_tag("no-small.png", :alt=>"no") %>
 	<% end %>
-	<b>Povoleno kopírování</b>
+	<strong>Povoleno kopírování</strong>
 </p>
 
 <p>
-	<b>Odkaz ke stažení</b>
+	<strong>Odkaz ke stažení: </strong>
+	<%= link_to "https://#{self.request.host}/pdfdown/#{@vlozitpdf.hashString.to_s}", "/pdfdown/"+ @vlozitpdf.hashString.to_s %>
 </p>
+
+<h2>Komentáře: </h2>
+<% @vlozitpdf.comments.each do |comment| %>
+  <p>
+    <b>Uživatel: </b>
+    <%= comment.author %>
+  </p>
+ 
+  <p>
+    <b>Komentář: </b>
+    <%= comment.content %>
+  </p>
+<% end %>
+
+<h2>Vložit komentář: </h2>
+<%= form_for([@vlozitpdf, @vlozitpdf.comments.build]) do |f| %>
+	<div class="field">
+		<%= f.hidden_field :author, :value => current_user[:user_id] %>
+	</div>
+  <div class="field">
+    <%= f.label :content, "Text komentáře" %><br />
+    <%= f.text_area :content %>
+  </div>
+  <div class="actions">
+    <%= f.submit "Komentovat" %>
+  </div>
+<% end %>
+
 
 
 <%= link_to 'Upravit', edit_vlozitpdf_path(@vlozitpdf) %> |

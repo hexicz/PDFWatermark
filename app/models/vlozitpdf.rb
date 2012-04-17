@@ -2,6 +2,8 @@
 
 class Vlozitpdf < ActiveRecord::Base
 	has_attached_file :soubor, :path=> ":rails_root/public/pdf/:basename.:extension"
+	
+	has_many :comments
 
 	before_create :edit_file_name
 	

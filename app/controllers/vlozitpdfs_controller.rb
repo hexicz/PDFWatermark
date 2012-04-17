@@ -15,8 +15,9 @@ class VlozitpdfsController < ApplicationController
   # GET /vlozitpdfs/1
   # GET /vlozitpdfs/1.xml
   def show
+    
     @vlozitpdf = Vlozitpdf.find(params[:id])
-
+    
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @vlozitpdf }
