@@ -7,7 +7,11 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-
+<div id="userbar">
+<% if current_user %>
+	<p>Přihlášen uživatel: <strong><%= current_user[:user_id] %></strong></p>
+<% end %>
+</div>
 <%= yield %>
 
 </body>

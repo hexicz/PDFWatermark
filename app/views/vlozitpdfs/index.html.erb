@@ -5,6 +5,7 @@
 		<th>Název</th>
     <th>Vložil</th>
 		<th>Distribuce</th>
+    <th>Cena</th>
     <th>Povolen tisk</th>
     <th>Povoleno kopírování</th>
     <th></th>
@@ -14,10 +15,18 @@
   </tr>
 
 <% @vlozitpdfs.each do |vlozitpdf| %>
+  <% @paid = false %>
   <tr>
-		<td><%= vlozitpdf.soubor_file_name %></td>
+		<td><%= vlozitpdf.name %></td>
     <td><%= vlozitpdf.vlozil %></td>
-		<td><%= vlozitpdf.distribuce %></td>
+    <td><%= vlozitpdf.distribuce %></td>
+		<td>
+      <% if vlozitpdf.price.nil? %>
+        0 Kč
+      <% else %>
+        <%= vlozitpdf.price %> Kč
+      <% end %>
+    </td>
     <td>
 			<% if vlozitpdf.tisk %>  <%= image_tag("yes-small.png", :alt=>"yes") %>
 			<% else %> <%= image_tag("no-small.png", :alt=>"no") %>
@@ -29,9 +38,28 @@
 			<% end %>
 		</td>
     <td><%= link_to 'Zobrazit', vlozitpdf %></td>
-    <td><%= link_to 'Upravit', edit_vlozitpdf_path(vlozitpdf) %></td>
-    <td><%= link_to 'Smazat', vlozitpdf, :confirm => 'Opravdu smazat?', :method => :delete %></td>
-		<td><%= link_to "https://#{self.request.host}/pdfdown/#{vlozitpdf.hashString.to_s}", "pdfdown/"+vlozitpdf.hashString.to_s %></td>
+    <td><% if vlozitpdf.vlozil == current_user[:user_id] || is_admin %><%= link_to 'Upravit', edit_vlozitpdf_path(vlozitpdf) %><% end %></td>
+    <td><% if vlozitpdf.vlozil == current_user[:user_id]|| is_admin %><%= link_to 'Smazat', vlozitpdf, :confirm => 'Opravdu smazat?', :method => :delete %><% end %></td>
+    <% if vlozitpdf.distribuce == "Zdarma pro všechny" %>
+		  <td><%= link_to "https://#{self.request.host}/free/pdfdown/#{vlozitpdf.hashString.to_s}", "/free/pdfdown/" + vlozitpdf.hashString.to_s %></td>
+    <% elsif vlozitpdf.distribuce == "Placeně" %>
+      <% if !@purchases.nil? %>
+        <% @purchases.each do |purchase| %>
+            <% if purchase.pdf_id == vlozitpdf.id && !purchase.purchased_at.nil? %>
+              <td><%= link_to "https://#{self.request.host}/pdfdown/#{vlozitpdf.hashString.to_s}", "/pdfdown/" + vlozitpdf.hashString.to_s %></td>
+              <% @paid = true %>
+            <% end %>
+        <% end %> 
+        <% if @paid == false %>   
+          <td><%= link_to(image_tag("btn-paypal.gif"), vlozitpdf.paypal_url(current_user[:user_id]), :class => "no-back") %></td>
+        <% end %>
+      <% end %>
+      <% if @purchases.nil? && @paid == false %>   
+          <td><%= link_to(image_tag("btn-paypal.gif"), vlozitpdf.paypal_url(current_user[:user_id]), :class => "no-back") %></td>
+        <% end %>
+    <% else %>
+      <td><%= link_to "https://#{self.request.host}/pdfdown/#{vlozitpdf.hashString.to_s}", "/pdfdown/" + vlozitpdf.hashString.to_s %></td>
+    <% end %>
   </tr>
 <% end %>
 </table>

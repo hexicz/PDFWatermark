@@ -1,8 +1,0 @@
-<h1>Secure place</h1>
-<p>
-<% if current_user  %>
-  Přihlášen <%= current_user[:user_email] %> | <%= link_to 'Odhlásit', logout_path %>
-<% else %>
-  Nepřihlášen
-<% end %>
-</p>

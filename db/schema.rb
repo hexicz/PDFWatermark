@@ -10,7 +10,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110427082235) do
+ActiveRecord::Schema.define(:version => 20120416150901) do
+
+  create_table "comments", :force => true do |t|
+    t.string   "author"
+    t.text     "content"
+    t.integer  "vlozitpdf_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "vlozitpdfs", :force => true do |t|
     t.string   "vlozil"
@@ -24,6 +32,8 @@ ActiveRecord::Schema.define(:version => 20110427082235) do
     t.datetime "soubor_updated_at"
     t.string   "paticka"
     t.string   "hashString"
+    t.string   "distribuce"
+    t.text     "poznamka"
   end
 
 end

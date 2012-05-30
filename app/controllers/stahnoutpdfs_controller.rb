@@ -7,7 +7,8 @@ class StahnoutpdfsController < ApplicationController
 @@BARVAPISMA = "c0c0c0"
 @@FONT = "Helvetica"
 
-  private  
+  private 
+    # generate random password 
     def generujHeslo(length=8)
       chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'
       password = ''
@@ -16,16 +17,77 @@ class StahnoutpdfsController < ApplicationController
     end
 
   public 
-    def stahnoutpdfko
-      #@pdfko = Vlozitpdf.find(params[:hashString])      
+    #download PDF with watermark if possible (user is logged or pdf distribution is set to free or user has paid for PDF)
+    def stahnoutpdfko  
       @pdfko = Vlozitpdf.find(:first, :conditions =>["hashString = ?",params[:hashString]])
-			@username = fel_id[:user_id]
-    	@hostname = self.request.host
-    	@opravneni = 00
-    	@velikostPapiru = "A4"
-    	@soubor = @pdfko.soubor_file_name
-    	@footerText = @pdfko.paticka
-      
+      @hostname = self.request.host
+
+      if @pdfko.tisk && @pdfko.kopirovat
+        @opravneni = 11
+      elsif !@pdfko.tisk && @pdfko.kopirovat
+        @opravneni = 10
+      elsif @pdfko.tisk && !@pdfko.kopirovat
+        @opravneni = 01
+      else
+        @opravneni = 00
+      end   
+
+      @velikostPapiru = "A4"
+      @soubor = @pdfko.soubor_file_name
+      @footerText = @pdfko.paticka
+      @username = fel_id[:user_id] 
+
+      if params[:is_free].present? 
+        if params[:is_free] == "free" 
+          if @pdfko.distribuce == "Zdarma pro všechny"
+            if fel_id[:user_id].nil?
+              @username = "anonym"
+            end
+          else
+            logger.info "Nepovoleno"
+            session[:hash_string] = @pdfko.hashString
+            # přistupuje přes free adresu na dokument, který není určen pro stažení zdarma
+            redirect_to :action => :nepovoleno
+            return
+          end
+        else
+          raise ActionController::RoutingError.new("Not Found")
+        end
+      end
+
+      if @pdfko.distribuce == "Placeně"
+        logger.info "placená distribuce"
+        paid = false
+        if fel_id[:user_id].nil?
+          session[:hash_string] = @pdfko.hashString
+          # přistupuje přes free adresu na dokument, který není určen pro stažení zdarma
+          redirect_to :action => :nepovoleno 
+          return
+        else
+            user = User.find_by_username(fel_id[:user_id])
+            if user
+              purchases = Purchase.where("user_id = ?", user.id)
+            end
+            if !purchases.nil?
+              logger.info "uvnitř purchases" 
+              purchases.each do |purchase| 
+                if purchase.pdf_id == @pdfko.id && !purchase.purchased_at.nil?
+                  logger.info "paid true for #{@pdfko.id} and #{purchase.id}"
+                  paid = true
+                end
+              end
+            end
+        end
+
+        if paid == false
+          session[:hash_string] = @pdfko.hashString
+          session[:pdf_id] = @pdfko.id
+          # přistupuje přes free adresu na dokument, který není určen pro stažení zdarma
+          redirect_to :action => :nezaplaceno
+          return
+        end  
+      end
+
       pdf = Prawn::Document.generate("#{Rails.root}/tmp/pdf/tmp_#{@username}_#{@soubor}", :page_size => @velikostPapiru, :page_layout => :portrait, :left_margin => 0, :right_margin => 0, :top_margin => 0, :bottom_margin => 0) do |pdf|
         pdf.font @@FONT
         
@@ -65,6 +127,8 @@ class StahnoutpdfsController < ApplicationController
 
         pdf.text_box(@footerText, :size => 11, :at => [0,20], :align => :center)
         pdf.text_box(headerText, :size => 11, :at => [0, page_height - 15], :width => page_width, :align => :center)
+        pdf.fill_color "ffffff"
+        pdf.text_box(headerText, :size => 1, :at => [0, page_height - 30], :width => page_width, :align => :center)
 
         for i in (1..4)
           @soubor.chop!
@@ -87,12 +151,25 @@ class StahnoutpdfsController < ApplicationController
           @setPerm = "allow printing copycontents"
       end
       
-      system("pdftk #{Rails.root}/public/pdf/#{@soubor}.pdf background #{Rails.root}/tmp/pdf/tmp_#{@username}_#{@soubor}.pdf output #{Rails.root}/tmp/pdf/#{@soubor}_#{@username}.pdf owner_pw #{@pdfHeslo} #{@setPerm}")
-      
+      # Vložení vodoznaku do pozadí dokumentu
+      # system("pdftk #{Rails.root}/public/pdf/#{@soubor}.pdf background #{Rails.root}/tmp/pdf/tmp_#{@username}_#{@soubor}.pdf output #{Rails.root}/tmp/pdf/#{@soubor}_#{@username}.pdf owner_pw #{@pdfHeslo} #{@setPerm}")
+      # Vložení vodoznaku do popředí dokumentu
+      system("pdftk #{Rails.root}/public/pdf/#{@soubor}.pdf stamp #{Rails.root}/tmp/pdf/tmp_#{@username}_#{@soubor}.pdf output #{Rails.root}/tmp/pdf/#{@soubor}_#{@username}.pdf owner_pw #{@pdfHeslo} #{@setPerm}")
+
       system("rm -rf #{Rails.root}/tmp/pdf/tmp_#{@username}_#{@soubor}.pdf")
       
       send_file "#{Rails.root}/tmp/pdf/#{@soubor}_#{@username}.pdf", :type => "application/pdf"
 
+    end
+
+    # user isn't logged
+    def nepovoleno
+      @hash_string = session[:hash_string]
+    end
+
+    # user haven't paid for PDF
+    def nezaplaceno
+      @pdf_id = session[:pdf_id]
     end
     
 end

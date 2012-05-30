@@ -12,16 +12,24 @@
   <% end %>
   
   <div class="field">
+    <%= f.label :name, "Název:" %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
 		<%= f.label :soubor, "Vybrat soubor:" %><br />
 		<%= f.file_field :soubor %>
 	</div>
 	<div class="field">
-		<%= f.label :poznamka, "Informace o dokumentu:" %><br />
+		<%= f.label :poznamka, "Anotace dokumentu:" %><br />
 		<%= f.text_area :poznamka %>
 	<div class="field">
 		<%= f.label :distribuce, "Typ distribuce:" %><br />
 		<%= f.select :distribuce, options_for_select(["Zdarma pro všechny", "Zdarma pro studenty", "Placeně"], @vlozitpdf.distribuce) %>
 	</div>
+  <div class="field">
+    <%= f.label :price, "Cena:" %><br />
+    <%= f.text_field :price %>
+  </div>
 	<div class="field">
 		<%= f.label :paticka, "Text v zápatí dokumentu:" %><br />
 		<%= f.text_field :paticka %>

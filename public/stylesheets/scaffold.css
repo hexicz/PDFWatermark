@@ -73,3 +73,13 @@ th{
 #main{
 	text-align: center;
 }
+
+a.no-back {
+  background: none;
+  border: none;
+}
+
+a.no-back:hover {
+  background: none;
+  border: none;
+}

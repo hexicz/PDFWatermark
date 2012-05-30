@@ -1,7 +1,12 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-	<strong>Název: </strong>
+	<strong>Název dokumentu: </strong>
+	<%= @vlozitpdf.name %>
+</p>
+
+<p>
+	<strong>Název souboru: </strong>
 	<%= @vlozitpdf.soubor_file_name %>
 </p>
 
@@ -16,7 +21,7 @@
 </p>
 
 <p>
-	<strong>Poznámka: </strong><br />
+	<strong>Anotace: </strong><br />
 	<%= @vlozitpdf.poznamka %>
 </p>
 	
@@ -24,6 +29,15 @@
 <p>
 	<strong>Distribuce: </strong>
 	<%= @vlozitpdf.distribuce %>
+</p>
+
+<p>
+	<strong>Cena: </strong>
+	<% if @vlozitpdf.price.nil? %>
+		0 Kč
+	<% else %>
+		<%= @vlozitpdf.price %> Kč
+	<% end %>
 </p>
 
 
@@ -46,8 +60,22 @@
 </p>
 
 <p>
-	<strong>Odkaz ke stažení: </strong>
-	<%= link_to "https://#{self.request.host}/pdfdown/#{@vlozitpdf.hashString.to_s}", "/pdfdown/"+ @vlozitpdf.hashString.to_s %>
+	<strong>Odkaz ke stažení: </strong><br />
+	<% if @vlozitpdf.distribuce == "Zdarma pro všechny" %>
+		<%= link_to "https://#{self.request.host}/free/pdfdown/#{@vlozitpdf.hashString.to_s}", "/free/pdfdown/" + @vlozitpdf.hashString.to_s %>
+	<% elsif @vlozitpdf.distribuce == "Placeně" %>
+		<% @purchases.each do |purchase| %>
+      <% if purchase.pdf_id == @vlozitpdf.id && !purchase.purchased_at.nil? %>
+      	<td><%= link_to "https://#{self.request.host}/pdfdown/#{vlozitpdf.hashString.to_s}", "/pdfdown/" + @vlozitpdf.hashString.to_s %></td>
+        <% @paid = true %>
+      <% end %>
+    <% end %> 
+    <% if @paid == false %>   
+      <td><%= link_to(image_tag("btn-paypal.gif"), @vlozitpdf.paypal_url(current_user[:user_id]), :class => "no-back") %></td>
+    <% end %>
+	<% else %>
+		<%= link_to "https://#{self.request.host}/pdfdown/#{@vlozitpdf.hashString.to_s}", "/pdfdown/" + @vlozitpdf.hashString.to_s %>
+	<% end %>
 </p>
 
 <h2>Komentáře: </h2>
